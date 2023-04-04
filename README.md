@@ -27,42 +27,75 @@ https://cpf-tools.vercel.app
 
 <br>
 
-Geração de CPF
+## Ferramentas para CPF
+
+### Geração de CPF
 
 - Método GET
+##### Endpoint
 ````
-/v1/generate
+/v1/cpf/generate
 ````
-- Estrutura da resposta bem sucedida do servidor
+
+Respostas do servidor
+- Estrutura da resposta JSON bem sucedida do servidor
 ````json
 {
   "cpf": "000.000.000-00",
-  "code": 200
+  "code": 201
 }
 ````
 
-- Estrutura da resposta mal sucedida do servidor
+- Estrutura da resposta JSON mal sucedida do servidor
 ````json
 {
-  "message": "Ocorreu um erro ao gerar CPF",
-  "code": 400
+  "message": "Ocorreu um erro ao gerar CPF.",
+  "code": 500
 }
 ````
 
 <br>
+<br>
 
-Validação de CPF
+### Geração de CPF por UF
 
 - Método GET
-````
-/v1/validate/:cpf
-````
-- Parâmetros da requisição
-````
-/v1/validate/000.000.008-00
+##### Endpoint
+````sh
+/v2/cpf/generate/:uf   # substitua o parâmetro ':uf' por um valor válido
 ````
 
-- Estrutura da resposta bem sucedida do servidor
+Respostas do servidor
+- Estrutura da resposta JSON bem sucedida do servidor
+````json
+{
+  "cpf": "000.000.000-00",
+  "code": 201
+}
+````
+
+- Estrutura da resposta JSON mal sucedida do servidor
+````json
+{
+  "message": "Ocorreu um erro ao gerar CPF.",
+  "code": 500
+}
+````
+
+<br>
+<br>
+
+### Validação de CPF
+
+- Método GET
+##### Endpoint
+````sh
+/v1/cpf/validate/:cpf   # substitua o parâmetro ':cpf' por um valor válido
+````
+
+
+Respostas do servidor
+- Estrutura da resposta JSON bem sucedida do servidor
 ````json
 {
   "message": "CPF é válido.",
@@ -70,14 +103,75 @@ Validação de CPF
     "uf": "São Paulo",
     "digit": 8
   },
-  "code": 200
+  "code": 201
 }
 ````
 
-- Estrutura da resposta mal sucedida do servidor
+- Estrutura da resposta JSON mal sucedida do servidor
 ````json
 {
   "message": "CPF é inválido",
+  "code": 400
+}
+````
+
+<br>
+<br>
+<br>
+
+## Ferramentas para CNPJ
+
+### Geração de CNPJ
+
+- Método GET
+##### Endpoint
+````
+/v1/cnpj/generate
+````
+
+Respostas do servidor
+- Estrutura da resposta JSON bem sucedida do servidor
+````json
+{
+  "cpf": "00.000.000/0001-00",
+  "code": 201
+}
+````
+
+- Estrutura da resposta JSON mal sucedida do servidor
+````json
+{
+  "message": "Ocorreu um erro ao gerar CNPJ.",
+  "code": 500
+}
+````
+
+<br>
+<br>
+
+### Validação de CNPJ
+
+- Método GET
+##### Endpoint
+````sh
+/v1/cnpj/validate/:cnpj   # substitua o parâmetro ':cnpj' por um valor válido
+````
+
+<b>Atenção: </b> certifique-se de que o parâmetro fornecido tenha somente números.
+
+Respostas do servidor
+- Estrutura da resposta JSON bem sucedida do servidor
+````json
+{
+  "message": "CNPJ é válido.",
+  "code": 201
+}
+````
+
+- Estrutura da resposta JSON mal sucedida do servidor
+````json
+{
+  "message": "'CNPJ é inválido.",
   "code": 400
 }
 ````
