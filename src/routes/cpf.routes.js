@@ -35,7 +35,7 @@ router.get('/v1/cpf/validate/:cpf', (req, res) => {
 router.get('/v2/cpf/generate/:uf', (req, res) => {
   const { uf } = req.params;
 
-  const isValidUf = uf_list.find(item => item.uf === uf && item);
+  const isValidUf = uf_list.find(item => item.uf === uf.toUpperCase() && item);
 
   if (!isValidUf)
     return res.status(404).json({ message: 'UF não encontrado.', code: 404 });
