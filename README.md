@@ -1,6 +1,6 @@
-<h2>CPF API</h2>
+# CPF/CNPJ API
 
-<h3>API para validação e geração de CPFs.</h3>
+## Validação e geração de CPF e CNPJ.
 
 <br>
 
@@ -8,22 +8,31 @@ O uso deste projeto restringe-se somente para
   - fins acadêmicos;
   - testes que envolvam validação ou sistemas de cadastro;
 
-É vedado o uso deste projeto para fins ilícitos, como <b>falsidade ideológica</b> que está previsto nos <b>artigos 297 a 302 do Código Penal</b>.
+É vedado o uso deste projeto para fins ilícitos, como **<u>falsidade ideológica</u>** que está previsto nos <b>artigos 297 a 302 do Código Penal</b>.
 
-Este projeto foi desenvolvido com
-- Node.js
-
-<br>
-
-### Endpoints da API
-É necessário fazer chamadas HTTP para URL junto com endpoint
+Este projeto foi desenvolvido com Node.js.
 
 <br>
 
-URL base
+## Endpoints
+
+#### URL base
 ````
-https://cpf-tools.vercel.app
+https://cpf-tools.vercel.app/api/v2
 ````
+
+### Métodos
+| Método | Descrição |
+|---|---|
+| `GET` | Retorna informações de geração ou validação |
+
+### Respostas
+| Código | Descrição |
+|---|---|
+| `200` | Requisição executada com sucesso (success).|
+| `400` | Erros de validação ou os campos informados não existem no sistema.|
+| `404` | Registro pesquisado não encontrado (Not found).|
+| `500` | Erro interno no servidor. Indica uma situação inesperada que impede o atendimento da requisição. Recomenda-se verificar os logs do servidor para diagnosticar a causa. Entre em contato com a equipe de suporte se o erro persistir.|
 
 <br>
 
@@ -31,147 +40,178 @@ https://cpf-tools.vercel.app
 
 ### Geração de CPF
 
-- Método GET
-##### Endpoint
+Endpoint
 ````
-/v1/cpf/generate
+/cpf/generate
 ````
 
 Respostas do servidor
-- Estrutura da resposta JSON bem sucedida do servidor
+- Response 200 (application/json)
 ````json
 {
-  "cpf": "000.000.000-00",
-  "code": 201
+  "cpf": {
+    "formatted": "000.000.000-00",
+    "unformatted": "00000000000"
+  }
 }
 ````
 
-- Estrutura da resposta JSON mal sucedida do servidor
+- Response 500 (application/json)
 ````json
 {
-  "message": "Ocorreu um erro ao gerar CPF.",
-  "code": 500
+  "message": "Ocorreu um erro ao gerar CPF."
 }
 ````
 
-<br>
 <br>
 
 ### Geração de CPF por UF
 
-- Método GET
-##### Endpoint
+Endpoint
 ````sh
-/v2/cpf/generate/:uf   # substitua o parâmetro ':uf' por um valor válido
+/cpf/generate/:uf   # substitua o parâmetro ':uf' por um UF válido
 ````
 
-Respostas do servidor
-- Estrutura da resposta JSON bem sucedida do servidor
-````json
-{
-  "cpf": "000.000.000-00",
-  "code": 201
-}
-````
+<details>
+  <summary>Exibir lista de UF</summary>
 
-- Estrutura da resposta JSON mal sucedida do servidor
-````json
-{
-  "message": "Ocorreu um erro ao gerar CPF.",
-  "code": 500
-}
-````
+  | Nome                   | UF  | Dígito |
+  |------------------------|-----|--------|
+  | Acre                   | AC  | 2      |
+  | Alagoas                | AL  | 4      |
+  | Amapá                  | AP  | 2      |
+  | Amazonas               | AM  | 2      |
+  | Bahia                  | BA  | 5      |
+  | Ceará                  | CE  | 3      |
+  | Distrito Federal       | DF  | 1      |
+  | Espirito Santo         | ES  | 7      |
+  | Goiás                  | GO  | 1      |
+  | Maranhão               | MA  | 3      |
+  | Mato Grosso            | MT  | 1      |
+  | Mato Grosso do Sul     | MS  | 1      |
+  | Minas Gerais           | MG  | 6      |
+  | Pará                   | PA  | 2      |
+  | Paraíba                | PB  | 4      |
+  | Paraná                 | PR  | 9      |
+  | Pernambuco             | PE  | 4      |
+  | Piauí                  | PI  | 3      |
+  | Rio de Janeiro         | RJ  | 7      |
+  | Rio Grande do Norte    | RN  | 4      |
+  | Rio Grande do Sul      | RS  | 0      |
+  | Rondônia               | RO  | 2      |
+  | Roraima                | RR  | 2      |
+  | Santa Catarina         | SC  | 9      |
+  | São Paulo              | SP  | 8      |
+  | Sergipe                | SE  | 5      |
+  | Tocantins              | TO  | 1      |
+</details>
 
 <br>
+
+Respostas do servidor
+- Response 200 (application/json)
+````json
+{
+  "cpf": "000.000.000-00"
+}
+````
+
+- Response 404 (application/json)
+````json
+{
+  "message": "UF não encontrado."
+}
+````
+
+- Response 500 (application/json)
+````json
+{
+  "message": "Ocorreu um erro ao gerar CPF."
+}
+````
+
 <br>
 
 ### Validação de CPF
 
-- Método GET
-##### Endpoint
+Endpoint
 ````sh
-/v1/cpf/validate/:cpf   # substitua o parâmetro ':cpf' por um valor válido
+/cpf/validate/:cpf   # substitua o parâmetro ':cpf' por um valor válido
 ````
-
 
 Respostas do servidor
-- Estrutura da resposta JSON bem sucedida do servidor
+- Response 200 (application/json)
 ````json
 {
-  "message": "CPF é válido.",
-  "infos": {
-    "uf": "São Paulo",
-    "digit": 8
-  },
-  "code": 201
+  "message": "CPF é válido."
 }
 ````
 
-- Estrutura da resposta JSON mal sucedida do servidor
+- Response 400 (application/json)
 ````json
 {
-  "message": "CPF é inválido",
-  "code": 400
+  "message": "Forneça um CPF válido."
 }
 ````
 
-<br>
-<br>
+- Response 422 (application/json)
+````json
+{
+  "message": "CPF é inválido."
+}
+````
+
 <br>
 
 ## Ferramentas para CNPJ
 
 ### Geração de CNPJ
 
-- Método GET
-##### Endpoint
+Endpoint
 ````
-/v1/cnpj/generate
+/cnpj/generate
 ````
 
 Respostas do servidor
-- Estrutura da resposta JSON bem sucedida do servidor
+- Response 200 (application/json)
 ````json
 {
-  "cpf": "00.000.000/0001-00",
-  "code": 201
+  "cnpj": {
+    "formatted": "00.000.000/0001-00",
+    "unformatted": "00000000000100"
+  }
 }
 ````
 
-- Estrutura da resposta JSON mal sucedida do servidor
+- Response 500 (application/json)
 ````json
 {
-  "message": "Ocorreu um erro ao gerar CNPJ.",
-  "code": 500
+  "message": "Ocorreu um erro ao gerar CNPJ."
 }
 ````
 
-<br>
 <br>
 
 ### Validação de CNPJ
 
-- Método GET
-##### Endpoint
+Endpoint
 ````sh
-/v1/cnpj/validate/:cnpj   # substitua o parâmetro ':cnpj' por um valor válido
+/cnpj/validate/:cnpj   # substitua o parâmetro ':cnpj' por um valor válido
 ````
 
 <b>Atenção: </b> certifique-se de que o parâmetro fornecido tenha somente números.
 
 Respostas do servidor
-- Estrutura da resposta JSON bem sucedida do servidor
+- Response 200 (application/json)
 ````json
 {
-  "message": "CNPJ é válido.",
-  "code": 201
+  "message": "CNPJ é válido."
 }
 ````
 
-- Estrutura da resposta JSON mal sucedida do servidor
+- Response 422 (application/json)
 ````json
 {
-  "message": "'CNPJ é inválido.",
-  "code": 400
+  "message": "'CNPJ é inválido."
 }
 ````
