@@ -32,6 +32,7 @@ https://cpf-tools.vercel.app/api/v2
 | `200` | Requisição executada com sucesso (success).|
 | `400` | Erros de validação ou os campos informados não existem no sistema.|
 | `404` | Registro pesquisado não encontrado (Not found).|
+| `422` | A requisição foi entendida, mas contém parâmetros ou dados inválidos.|
 | `500` | Erro interno no servidor. Indica uma situação inesperada que impede o atendimento da requisição. Recomenda-se verificar os logs do servidor para diagnosticar a causa. Entre em contato com a equipe de suporte se o erro persistir.|
 
 <br>
