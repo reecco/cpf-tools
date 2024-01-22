@@ -113,7 +113,10 @@ Respostas do servidor
 - Response 200 (application/json)
 ````json
 {
-  "cpf": "000.000.000-00"
+  "cpf": {
+    "formatted": "000.000.000-00",
+    "unformatted": "00000000000"
+  }
 }
 ````
 
