@@ -1,29 +1,31 @@
-import { Router } from "express";
-
-import { CNPJ } from "../utils/index.js";
+const { Router } = require('express');
+const { generate, isValid } = require('../validators/CNPJ');
 
 const router = Router();
 
-router.get('/v1/cnpj/generate', (req, res) => {
-  const cnpj = CNPJ.generate();
+router.get('/cnpj/generate', (req, res) => {
+  const cnpj = generate();
 
   if (!cnpj)
-    return res.status(500).json({ message: 'Ocorreu um erro ao gerar CNPJ.', code: 500 });
+    return res.status(500).json({ message: 'Ocorreu um erro ao gerar CNPJ.' });
 
-  res.status(201).json({ cnpj, code: 201 });
+  res.status(200).json({
+    cnpj: {
+      formatted: cnpj,
+      unformatted: cnpj.replace(/[^\d]/g, '')
+    }
+  });
 });
 
-router.get('/v1/cnpj/validate/:cnpj', (req, res) => {
+router.get('/cnpj/validate/:cnpj', (req, res) => {
   let { cnpj } = req.params;
 
-  cnpj = cnpj.replace(/[//.-]/g);
+  const formattedCnpj = cnpj.replace(/[//.-]/g);
 
-  const isValid = CNPJ.isValidDigits(cnpj);
+  if (!isValid(formattedCnpj))
+    return res.status(422).json({ message: 'CNPJ é inválido.' });
 
-  if (!isValid)
-    return res.status(400).json({ message: 'CNPJ é inválido.', code: 400 });
-
-  res.status(201).json({ message: 'CNPJ é válido.', code: 201 });
+  res.status(200).json({ message: 'CNPJ é válido.' });
 });
 
-export default router;
+module.exports = router;

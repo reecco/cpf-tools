@@ -1,51 +1,56 @@
-import { Router } from "express";
-
-import { CPF } from "../utils/index.js";
-import { uf_list } from "../utils/lists.js";
+const { Router } = require('express');
+const { generate, isValid, generateByUF } = require('../validators/CPF');
+const { uf_list } = require('../utils/index');
 
 const router = Router();
 
-router.get('/v1/cpf/generate', (req, res) => {
-  const cpf = CPF.generate();
+router.get('cpf/generate', (req, res) => {
+  const cpf = generate();
 
   if (!cpf)
-    return res.status(500).json({ message: 'Ocorreu um erro ao gerar CPF.', code: 500 });
+    return res.status(500).json({ message: 'Ocorreu um erro ao gerar CPF.' });
 
-  return res.status(201).json({ cpf, code: 201 });
+  res.status(200).json({
+    cpf: {
+      formatted: cpf,
+      unformatted: cpf.replace(/[.-]/g, '')
+    }
+  });
 });
 
-router.get('/v1/cpf/validate/:cpf', (req, res) => {
+router.get('/cpf/validate/:cpf', (req, res) => {
   let { cpf } = req.params;
 
-  cpf = cpf.replace(/[.-]/g, '');
+  if (!cpf)
+    return res.status(400).json({ message: 'Forneça um CPF válido.' });
 
-  const isValid = CPF.isValidDigits(cpf);
+  const formattedCpf = cpf.replace(/[.-]/g, '');
 
-  if (!isValid)
-    return res.status(400).json({ message: 'CPF é inválido.', code: 400 });
+  if (!isValid(formattedCpf))
+    return res.status(422).json({ message: 'CPF é inválido.' });
 
-  const infos = CPF.searchUF(cpf);
-
-  if (!infos)
-    return res.status(400).json({ message: 'CPF é inválido.', code: 400 });
-
-  return res.status(201).json({ message: 'CPF é válido.', uf_list: infos, code: 201 });
+  res.status(200).json({ message: 'CPF é válido.' });
 });
 
-router.get('/v2/cpf/generate/:uf', (req, res) => {
+router.get('/cpf/generate/:uf', (req, res) => {
   const { uf } = req.params;
 
   const isValidUf = uf_list.find(item => item.uf === uf.toUpperCase() && item);
 
   if (!isValidUf)
-    return res.status(404).json({ message: 'UF não encontrado.', code: 404 });
+    return res.status(404).json({ message: 'UF não encontrado.' });
 
-  const cpf = CPF.generateByUF(uf.toUpperCase());
+  const cpf = generateByUF(uf.toUpperCase());
 
   if (!cpf)
-    return res.status(500).json({ message: 'Ocorre um erro ao gerar CPF.', code: 500 });
+    return res.status(500).json({ message: 'Ocorre um erro ao gerar CPF.' });
 
-  return res.status(201).json({ cpf, code: 201 });
+  res.status(200).json({
+    cpf: {
+      formatted: cpf,
+      unformatted: cpf.replace(/[.-]/g, '')
+    }
+  });
 });
 
-export default router;
+module.exports = router;

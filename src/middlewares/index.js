@@ -1,6 +1,6 @@
-import cors from 'cors';
+const cors = require('cors');
 
-export function access(app) {
+function access(app) {
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With');
@@ -9,3 +9,5 @@ export function access(app) {
     next();
   });
 }
+
+module.exports = { access }

@@ -1,12 +1,13 @@
-import { json } from 'express';
+const { json } = require('express');
 
-import cpfRoutes from './cpf.routes.js';
-import cnpjRoutes from './cnpj.routes.js';
+const cnpjRoutes = require('./cnpj.routes');
+const cpfRoutes = require('./cpf.routes');
 
-export default (app) => {
+module.exports = (app) => {
   app.route('/').get((req, res) => res.status(200).json({ message: 'CPF API', code: 200 }));
 
   app.use(
+    '/api/v2',
     json(),
     cpfRoutes,
     cnpjRoutes
