@@ -4,7 +4,7 @@ const { uf_list } = require('../utils/index');
 
 const router = Router();
 
-router.get('cpf/generate', (req, res) => {
+router.get('/cpf/generate', (req, res) => {
   const cpf = generate();
 
   if (!cpf)
